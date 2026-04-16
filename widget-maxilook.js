@@ -310,7 +310,7 @@
                             <input type="checkbox" id="q-accept-terms" style="margin-top:2px;cursor:pointer;accent-color:#000;">
                             Ao continuar, concordo com os <a href="http://provoulevou.com.br/termos.html" target="_blank" style="color:#8b5cf6;text-decoration:underline;">Termos e Condições</a>
                         </label>
-                        <button class="q-btn-black" id="q-btn-generate" disabled>Ver no meu corpo</button>
+                        <button class="q-btn-black" id="q-btn-generate" disabled>Provar Óculos</button>
                     </div>
 
 
