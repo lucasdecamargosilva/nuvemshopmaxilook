@@ -49,29 +49,7 @@
     }
 
 
-    function estimarTorax(altura, peso) {
-        if (altura < 3) altura *= 100;
-        let circ = 0.65 * peso + 56;
-        const imc = peso / Math.pow(altura / 100, 2);
-        if (imc > 30) circ += 4; else if (imc > 25) circ += 2;
-        return circ;
-    }
-
-
-    function findClosest(arr, val) {
-        let idx = 0, minDiff = Infinity;
-        arr.forEach((v, i) => { const d = Math.abs(v - val); if (d < minDiff) { minDiff = d; idx = i; } });
-        return idx;
-    }
-
-
-    let recommendedSize = 'M';
     let currentProduct = { category: 'top', fit: 'regular' };
-
-    function calculateFinalSize() {
-        // Feature desativada: não faz mais cálculos de tamanho
-        return;
-    }
 
 
     // ─── LOCK / UNLOCK SCROLL DA PÁGINA ──────────────────────────────────────────
@@ -190,7 +168,7 @@
             background: transparent;
             color: #000;
             border: 1px solid #000;
-            border-radius: 50px;
+            border-radius: 0;
             font-family: 'Work Sans', sans-serif;
             font-weight: 600;
             font-size: 10px;
@@ -336,9 +314,9 @@
                         <h1 style="margin:0 0 10px 0;font-size:20px;font-weight:700;letter-spacing:2px;text-transform:uppercase;">Provador Virtual</h1>
                         <div style="margin:0;text-align:center;">
   <img
-    src="https://i.ibb.co/cKXZD109/Adobe-Express-file-16-1.png"
+    src="https://i.ibb.co/nXsrsNP/maxilook-logo.webp"
     alt="MAXILOOK"
-    style="height:30px;width:auto;display:inline-block;filter:brightness(0);"
+    style="height:30px;width:auto;display:inline-block;"
   />
 </div>
 
@@ -829,15 +807,6 @@
                 fd.append('product_fit', currentProduct.fit);
                 fd.append('api_key', keyToUse);
 
-                if (currentProduct.category === 'top') {
-                    fd.append('height', '');
-                    fd.append('weight', '');
-                } else {
-                    fd.append('height', '');
-                    fd.append('weight', '');
-                    fd.append('cintura', '');
-                    fd.append('quadril', '');
-                }
 
                 if (prodImg) {
                     try {
@@ -845,8 +814,6 @@
                         fd.append('product_image', b, 'product.jpg');
                     } catch (_) { }
                 }
-
-                calculateFinalSize();
 
                 const res = await fetch(WEBHOOK_PROVA, { method: 'POST', body: fd });
 
