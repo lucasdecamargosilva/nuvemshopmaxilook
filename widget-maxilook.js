@@ -10,46 +10,6 @@
     // PIX desativado por enquanto
     // const WEBHOOK_PIX = 'https://n8n.segredosdodrop.com/webhook/maxilook-pix';
     // const WEBHOOK_PIX_STATUS = 'https://n8n.segredosdodrop.com/webhook/maxilook-pix-status';
-    const SIZES_TOP = ['XXP', 'XP', 'P', 'M', 'G', 'XG', 'XXG', '3XG', '4XG', '5XG'];
-    const SIZES_BOTTOM = ['36/XXP', '38/XP', '40/P', '42/M', '44/G', '46/XG', '48/XXG', '50/3XG', '52/4XG', '54/5XG'];
-    const SIZES_BOTTOM_SW = ['XXP', 'XP', 'P', 'M', 'G', 'XG', 'XXG', '3XG', '4XG', '5XG'];
-
-
-    const GRADE = {
-        regular: [49, 51, 54, 57, 61, 62, 64, 66, 70, 73],
-        oversized: [58, 60, 62, 64, 66, 70, 73, 76, 79, 83],
-        oversizedSS: [58, 61, 63, 67, 70, 74, 78, 82, 87, 92],
-        hoodie: [50, 53, 55, 58, 62, 65, 69, 74, 79, 83],
-        boxyHoodie: [61, 77, 78, 79, 80, 81, 82, 83, 84, 85],
-        puffer: [53, 56, 59, 61, 70, 74, 78, 82, 86, 90],
-        vest: [52, 55, 57, 59, 63, 66, 70, 72, 76, 82],
-        boxyHenley: [54, 56, 58, 64, 66, 68, 70, 76, 78, 84],
-        bottomTailoring: [36, 38, 40, 42, 44, 46, 48, 50, 52, 54],
-        bottomSweat: [36, 38, 40, 42, 44, 46, 48, 50, 52, 54],
-        underwear: [36, 38, 40, 42, 44, 46, 48, 50, 52, 54],
-        quadrilTailoring: [48, 50, 52, 56, 58, 60, 62, 64, 66, 68],
-        quadrilSweat: [48, 50, 52, 54, 56, 58, 60, 62, 64, 66],
-        quadrilUnderwear: [50, 52, 54, 56, 58, 60, 62, 64, 66, 68],
-    };
-
-
-    function detectProduct(name) {
-        const n = name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        if (/tailoring/.test(n) || /\d\/\d\s*short/.test(n) || /\b(1\/5|2\/5|3\/5|4\/5)\b/.test(n)) return { category: 'bottom', fit: 'tailoring' };
-        if (/underwear|cueca/.test(n)) return { category: 'bottom', fit: 'underwear' };
-        if (/sweatpant|sweatshort|sweat pant|sweat short|calca|bermuda/.test(n)) return { category: 'bottom', fit: 'sweat' };
-        if (/henley/.test(n)) return { category: 'top', fit: 'boxyHenley' };
-        if (/boxy.*(hoodie|crewneck|crew)/.test(n) || /(hoodie|crewneck|crew).*boxy/.test(n)) return { category: 'top', fit: 'boxyHoodie' };
-        if (/puffer|jacket/.test(n)) return { category: 'top', fit: 'puffer' };
-        if (/vest/.test(n)) return { category: 'top', fit: 'vest' };
-        if (/(hoodie|hoodie zip|half zip|crewneck|crew neck)/.test(n) && !/oversized|boxy|short sleeve/.test(n)) return { category: 'top', fit: 'hoodie' };
-        if (/oversized.*(hoodie|crewneck|crew|short sleeve)/.test(n) || /short sleeve.*(hoodie|crewneck)/.test(n)) return { category: 'top', fit: 'oversizedSS' };
-        if (/oversized|boxy tee|2\/4/.test(n)) return { category: 'top', fit: 'oversized' };
-        return { category: 'top', fit: 'regular' };
-    }
-
-
-    let currentProduct = { category: 'top', fit: 'regular' };
 
 
     // ─── LOCK / UNLOCK SCROLL DA PÁGINA ──────────────────────────────────────────
@@ -401,12 +361,6 @@
 
 
     function init() {
-        // --- FILTRO DE CATEGORIA (HAT) ---
-        const productNameNormalized = (document.querySelector('h1.product__title,.product-single__title,h1')?.innerText || document.title).toUpperCase();
-        if (productNameNormalized.includes('HAT')) {
-            return;
-        }
-
         const fontLink = document.createElement('link');
         fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
         fontLink.rel = 'stylesheet';
@@ -485,8 +439,6 @@
         inlineBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const prodName = document.querySelector('h1.product__title,.product-single__title,h1')?.innerText || document.title;
-            applyProduct(detectProduct(prodName));
             populateImageSelector();
             openModal();
         });
@@ -613,18 +565,11 @@
         }
 
 
-        function applyProduct(product) {
-            currentProduct = product;
-        }
-
-
         openBtn.onclick = (e) => {
             if (e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
-            const prodName = document.querySelector('h1.product__title,.product-single__title,h1')?.innerText || document.title;
-            applyProduct(detectProduct(prodName));
             populateImageSelector();
             openModal();
         };
@@ -803,8 +748,7 @@
                 fd.append('whatsapp', '55' + phoneInput.value.replace(/\D/g, ''));
                 fd.append('phone_raw', phoneInput.value);
                 fd.append('product_name', prodName);
-                fd.append('product_type', currentProduct.category);
-                fd.append('product_fit', currentProduct.fit);
+                fd.append('product_type', 'eyewear');
                 fd.append('api_key', keyToUse);
 
 
