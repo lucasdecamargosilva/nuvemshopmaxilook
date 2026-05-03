@@ -527,7 +527,7 @@
                     <!-- Persistent header (all steps) -->
                     <div id="q-header-provador">
                         <h1>Provador Virtual</h1>
-                        <img src="https://i.ibb.co/nXsrsNP/maxilook-logo.webp" alt="MAXILOOK" style="height:44px;width:auto;"/>
+                        <img src="https://i.ibb.co/nXsrsNP/maxilook-logo.webp" alt="MAXILOOK" style="height:34px;width:auto;"/>
                     </div>
 
                     <!-- Main step -->
