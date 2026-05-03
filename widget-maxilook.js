@@ -8,8 +8,8 @@
     const WEBHOOK_PROVA = 'https://n8n.segredosdodrop.com/webhook/gerador-oculos';
     const WEBHOOK_CHECK_LIMIT = 'https://n8n.segredosdodrop.com/webhook/maxilook-check-limit';
     // PIX desativado por enquanto
-    // const WEBHOOK_PIX = 'https://n8n.segredosdodrop.com/webhook/maxilook-pix';
-    // const WEBHOOK_PIX_STATUS = 'https://n8n.segredosdodrop.com/webhook/maxilook-pix-status';
+    const WEBHOOK_PIX = 'https://n8n.segredosdodrop.com/webhook/maxilook-pix';
+    const WEBHOOK_PIX_STATUS = 'https://n8n.segredosdodrop.com/webhook/maxilook-pix-status';
     const SIZES_TOP = ['XXP', 'XP', 'P', 'M', 'G', 'XG', 'XXG', '3XG', '4XG', '5XG'];
     const SIZES_BOTTOM = ['36/XXP', '38/XP', '40/P', '42/M', '44/G', '46/XG', '48/XXG', '50/3XG', '52/4XG', '54/5XG'];
     const SIZES_BOTTOM_SW = ['XXP', 'XP', 'P', 'M', 'G', 'XG', 'XXG', '3XG', '4XG', '5XG'];
@@ -1247,8 +1247,7 @@
                 const data = await resp.json();
                 if (data.limited) {
                     genBtn.disabled = false;
-                    alert('Você atingiu o limite de provas gratuitas.');
-                    genBtn.disabled = false;
+                    createPixAndPoll();
                     return;
                 }
             } catch (_) {
