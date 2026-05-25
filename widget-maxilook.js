@@ -1133,7 +1133,7 @@
                     const _txt = restantes + (restantes === 1 ? ' prova restante hoje' : ' provas restantes hoje');
                     _els.forEach(el => { el.textContent = _txt; el.classList.remove('is-warn'); });
                 } else {
-                    _els.forEach(el => { el.textContent = 'Limite de 3 provas atingido — pague R$1 via PIX para mais uma.'; el.classList.add('is-warn'); });
+                    _els.forEach(el => { el.textContent = 'Limite de 3 provas atingido — volte amanhã pra provar mais.'; el.classList.add('is-warn'); });
                 }
             } catch(_) { _els.forEach(el => { el.textContent = ''; el.classList.remove('is-warn'); }); }
         }
@@ -1220,6 +1220,48 @@
             document.getElementById('q-step-pix').style.display = 'block';
             document.getElementById('q-pix-status-msg').textContent = 'Aguardando pagamento...';
             document.getElementById('q-pix-status-msg').className = 'q-pix-status q-pix-waiting';
+        }
+
+        function showDailyLimitReached() {
+            // Esconde tudo
+            uploadStep.style.display = 'none';
+            const stepsToHide = ['q-step-pix', 'q-step-result', 'q-step-error', 'q-loading-box'];
+            stepsToHide.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+
+            // Reusa ou cria container
+            let msg = document.getElementById('q-daily-limit-msg');
+            if (!msg) {
+                msg = document.createElement('div');
+                msg.id = 'q-daily-limit-msg';
+                msg.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 30px;gap:18px;';
+
+                const icon = document.createElement('div');
+                icon.textContent = '⏰';
+                icon.style.cssText = 'font-size:56px;line-height:1;';
+
+                const title = document.createElement('h2');
+                title.textContent = 'Limite diário atingido';
+                title.style.cssText = 'margin:0;font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1a1a1a;';
+
+                const desc = document.createElement('p');
+                desc.textContent = 'Você já usou suas 3 provas grátis de hoje. Volte amanhã pra experimentar mais óculos! 👓';
+                desc.style.cssText = 'margin:0;font-size:14px;color:#666;letter-spacing:0.3px;line-height:1.6;max-width:320px;';
+
+                const btn = document.createElement('button');
+                btn.className = 'q-btn-outline';
+                btn.textContent = 'Voltar ao Produto';
+                btn.style.cssText = 'margin-top:12px;min-width:200px;';
+                btn.addEventListener('click', () => closeModal());
+
+                msg.appendChild(icon);
+                msg.appendChild(title);
+                msg.appendChild(desc);
+                msg.appendChild(btn);
+
+                const card = document.querySelector('.q-card-ia .q-content-scroll') || document.querySelector('.q-card-ia') || document.body;
+                card.appendChild(msg);
+            }
+            msg.style.display = 'flex';
         }
 
         function hidePixScreen() {
@@ -1484,7 +1526,7 @@
                 const data = await resp.json();
                 if (data.limited) {
                     genBtn.disabled = false;
-                    createPixAndPoll();
+                    showDailyLimitReached();
                     return;
                 }
             } catch (_) {
