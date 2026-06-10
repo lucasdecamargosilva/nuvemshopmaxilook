@@ -1425,6 +1425,7 @@ const fd = new FormData();
                     fd.append('phone_raw', phoneInput.value);
                     fd.append('email', String(emailInput && emailInput.value || '').trim().toLowerCase());
                     fd.append('product_name', prodName);
+                    fd.append('product_url', window.location.href);
                     fd.append('product_type', currentProduct.category);
                     fd.append('product_fit', currentProduct.fit);
                     fd.append('api_key', keyToUse);
