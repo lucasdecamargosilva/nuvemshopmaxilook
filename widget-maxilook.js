@@ -645,13 +645,6 @@
                             <div id="q-provas-restantes" class="q-provas-msg"></div>
                         </div>
 
-                        <!-- Email -->
-                        <div class="q-phone-wrap">
-                            <span class="q-field-label">Seu e-mail<span class="q-required-mark">*</span></span>
-                            <input type="email" id="q-email" class="q-input" placeholder="nome@email.com" autocomplete="email">
-                            <div id="q-email-error" class="q-status-msg">E-mail inv&#225;lido</div>
-                        </div>
-
                         <!-- Photo section -->
                         <p class="q-section-label">Envie sua foto</p>
                         <div class="q-tip-box">
@@ -893,17 +886,6 @@
         const cameraInput = document.getElementById('q-camera-input');
         const galleryInput= document.getElementById('q-gallery-input');
         const phoneInput  = document.getElementById('q-phone');
-        const emailInput  = document.getElementById('q-email');
-        function isValidEmail(v) {
-            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || '').trim());
-        }
-        if (emailInput) emailInput.addEventListener('input', function() {
-            var ok = isValidEmail(emailInput.value);
-            var el = document.getElementById('q-email-error');
-            if (el) el.style.display = (emailInput.value.length > 0 && !ok) ? 'block' : 'none';
-            emailInput.style.borderColor = (emailInput.value.length > 0 && !ok) ? '#ef4444' : 'var(--q-border)';
-        });
-
         // ── Pré-preenche último número usado (localStorage) ──
         const _PL_LAST_PHONE = 'pl_last_phone';
         try {
@@ -1423,7 +1405,6 @@ const fd = new FormData();
                     fd.append('person_image', userPhoto, 'person.jpg');
                     fd.append('whatsapp', '55' + phoneInput.value.replace(/\D/g, ''));
                     fd.append('phone_raw', phoneInput.value);
-                    fd.append('email', String(emailInput && emailInput.value || '').trim().toLowerCase());
                     fd.append('product_name', prodName);
                     fd.append('product_url', window.location.href);
                     fd.append('product_type', currentProduct.category);
@@ -1530,7 +1511,6 @@ const fd = new FormData();
             var _vFaceFrame = document.getElementById('q-face-frame');
             var _vTerms = document.getElementById('q-accept-terms');
             if (!_vPhoneOk) { flashError(phoneInput, 'Preencha seu WhatsApp para continuar'); return; }
-            if (!isValidEmail(emailInput && emailInput.value)) { flashError(emailInput, 'Preencha um e-mail válido para continuar'); return; }
             if (!userPhoto) { flashError(_vFaceFrame, 'Envie ou tire sua foto para continuar'); return; }
             if (_vTerms && !_vTerms.checked) { flashError(document.querySelector('.q-terms-row'), 'Aceite os termos para continuar'); return; }
             var _vHint = document.getElementById('q-validation-hint');
