@@ -1243,7 +1243,7 @@
                 title.style.cssText = 'margin:0;font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#1a1a1a;';
 
                 const desc = document.createElement('p');
-                desc.textContent = 'Você já usou suas 3 provas grátis de hoje. Volte amanhã pra experimentar mais óculos! 👓';
+                desc.textContent = 'Você já usou suas 3 provas grátis de hoje. Volte amanhã pra experimentar mais óculos.';
                 desc.style.cssText = 'margin:0;font-size:14px;color:#666;letter-spacing:0.3px;line-height:1.6;max-width:320px;';
 
                 const btn = document.createElement('button');
