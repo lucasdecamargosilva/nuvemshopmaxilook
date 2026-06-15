@@ -509,7 +509,7 @@
 
         .q-res-title {
             display: block;
-            font-family: var(--font-display); font-size: 18px;
+            font-family: var(--font-display); font-size: 15px;
             letter-spacing: 3px; text-transform: uppercase;
             color: var(--c-ink); padding: 20px 28px 16px; margin: 0;
             border-bottom: 1px solid var(--c-line);
@@ -532,11 +532,11 @@
         /* CTA de compra na tela de resultado */
         .q-result-prodinfo { text-align: left; margin-bottom: 6px; }
         .q-result-prodname {
-            font-family: var(--font-body); font-size: 16px; font-weight: 700;
+            font-family: var(--font-body); font-size: 14px; font-weight: 700;
             color: var(--c-ink); line-height: 1.25; margin-bottom: 6px;
         }
         .q-result-prodprice {
-            font-family: var(--font-display); font-size: 22px; letter-spacing: .5px; font-weight: 700;
+            font-family: var(--font-display); font-size: 18px; letter-spacing: .5px; font-weight: 700;
             color: var(--c-ink); line-height: 1;
         }
         .q-scarcity {
