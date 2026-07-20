@@ -690,16 +690,15 @@
         .q-btn-lentes:hover { background: #c31460; border-color: #c31460; }
         .q-btn-lentes .q-lentes-t { font-size: 14px; font-weight: 700; letter-spacing: .4px; line-height: 1.2; }
         .q-btn-lentes .q-lentes-s { font-size: 10.5px; font-weight: 500; opacity: .92; line-height: 1.2; }
-        /* botao secundario "COMPRAR SOMENTE A ARMACAO": fundo preto, texto branco
-           centralizado. Estilo proprio (nao herda o .q-btn-outline, que dava fundo
-           branco + texto a esquerda + letter-spacing longo demais). */
+        /* botao secundario "COMPRAR SOMENTE A ARMACAO": IGUAL ao primario (.q-btn-black)
+           em tamanho, so troca o rosa por PRETO. flex centraliza o texto; font-size/
+           letter-spacing um tico menores pro rotulo (mais longo) caber em 1 linha. */
         #q-so-armacao {
-            display: block; width: 100%; box-sizing: border-box;
-            height: auto; min-height: 48px; margin-top: 9px; padding: 13px 16px;
-            background: var(--c-ink); color: #fff; border: 1px solid var(--c-ink); border-radius: 14px;
-            font-family: var(--font-body); font-size: 12px; font-weight: 600;
-            letter-spacing: 1px; line-height: 1.25; text-align: center; white-space: normal;
-            cursor: pointer; transition: opacity .2s;
+            width: 100%; height: 52px; margin-top: 9px; box-sizing: border-box;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--c-ink); color: #fff; border: none; border-radius: 14px;
+            font-family: var(--font-display); font-size: 13px; letter-spacing: 2px;
+            text-transform: uppercase; white-space: nowrap; cursor: pointer; transition: opacity .2s;
         }
         #q-so-armacao:hover { opacity: .88; }
 
