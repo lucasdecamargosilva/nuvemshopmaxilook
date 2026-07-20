@@ -982,6 +982,9 @@
     <button class="q-opt" data-receita="digitar">
         <span class="q-opt-t">&#9000; Digitar os dados</span>
         <span class="q-opt-s">Prefiro preencher os campos eu mesma</span></button>
+    <button class="q-opt" data-receita="whatsapp">
+        <span class="q-opt-t">&#128172; N&atilde;o tenho receita</span>
+        <span class="q-opt-s">Falar com a &oacute;tica no WhatsApp &mdash; a gente te ajuda</span></button>
 
     <div id="q-lendo" class="q-lendo" hidden>
         <img id="q-thumb" alt="" hidden>
@@ -1350,7 +1353,7 @@
         // Posiciona acima do botão de compra
         const buyBtn = document.querySelector('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"]');
         if (buyBtn) {
-            buyBtn.parentNode.insertBefore(inlineBtn, buyBtn);
+            buyBtn.parentNode.insertBefore(inlineBtn, buyBtn.nextSibling);   // ABAIXO do comprar (nao compete com a acao principal)
         } else {
             const variantsContainer = document.querySelector('.js-product-variants');
             if (variantsContainer) {
@@ -2447,6 +2450,7 @@ if (typeof module !== 'undefined') {
     window.__PL_LENTES_LOADED__ = true;
 
     var FASE_CARRINHO_LENTE = true;    // o order bump nao auto-adiciona (testado) -> pode add a lente
+    var WHATSAPP_LOJA = '5519981930150';   // WhatsApp da Maxilook (para "Nao tenho receita")
     var WEBHOOK_RECEITA = 'https://n8n.segredosdodrop.com/webhook/pl-ler-receita';
     var WEBHOOK_STEP = 'https://n8n.segredosdodrop.com/webhook/pl-lentes-step';
 
@@ -2664,6 +2668,16 @@ if (typeof module !== 'undefined') {
 
         if (t.id === 'q-abrir-arquivo') { e.preventDefault(); track('receita_metodo', { metodo: 'enviar' }); $('#q-arquivo').click(); return; }
         if (t.dataset.receita === 'digitar') { e.preventDefault(); track('receita_metodo', { metodo: 'digitar' }); limparReceita(); abrirFormReceita('Digite sua receita', null); return; }
+        if (t.dataset.receita === 'whatsapp') {
+            e.preventDefault();
+            track('sem_receita_whatsapp', { visao: st.visao, trat: st.trat });
+            var prod = (document.getElementById('q-result-prodname') || {}).textContent
+                || (document.querySelector('h1.product-title,h1') || {}).innerText || '';
+            var msg = 'Olá! Não tenho minha receita e quero ajuda pra escolher a lente'
+                + (prod ? (' do ' + prod.trim()) : '') + '.';
+            window.open('https://wa.me/' + WHATSAPP_LOJA + '?text=' + encodeURIComponent(msg), '_blank');
+            return;
+        }
 
         if (t.id === 'q-ver-lente') {
             e.preventDefault();
