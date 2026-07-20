@@ -690,12 +690,18 @@
         .q-btn-lentes:hover { background: #c31460; border-color: #c31460; }
         .q-btn-lentes .q-lentes-t { font-size: 14px; font-weight: 700; letter-spacing: .4px; line-height: 1.2; }
         .q-btn-lentes .q-lentes-s { font-size: 10.5px; font-weight: 500; opacity: .92; line-height: 1.2; }
-        /* botao secundario "COMPRAR SOMENTE A ARMACAO": rotulo longo nao cabe com o
-           letter-spacing 3px + altura fixa do .q-btn-outline — afrouxa e deixa fluido */
+        /* botao secundario "COMPRAR SOMENTE A ARMACAO": fundo preto, texto branco
+           centralizado. Estilo proprio (nao herda o .q-btn-outline, que dava fundo
+           branco + texto a esquerda + letter-spacing longo demais). */
         #q-so-armacao {
-            height: auto; min-height: 48px; padding: 12px 16px;
-            font-size: 12px; letter-spacing: 1px; line-height: 1.25; white-space: normal;
+            display: block; width: 100%; box-sizing: border-box;
+            height: auto; min-height: 48px; margin-top: 9px; padding: 13px 16px;
+            background: var(--c-ink); color: #fff; border: 1px solid var(--c-ink); border-radius: 14px;
+            font-family: var(--font-body); font-size: 12px; font-weight: 600;
+            letter-spacing: 1px; line-height: 1.25; text-align: center; white-space: normal;
+            cursor: pointer; transition: opacity .2s;
         }
+        #q-so-armacao:hover { opacity: .88; }
 
 /* atributo hidden manda: sem isso, classes com display:flex (.q-lendo etc.)
    vencem o [hidden] por ordem de fonte e o elemento aparece cedo demais */
