@@ -440,16 +440,6 @@
             cursor: pointer; transition: border-color 0.2s, background 0.2s; box-sizing: border-box;
         }
         .q-btn-outline:hover { border-color: #e0186c; color: #e0186c; background: #fff0f6; }
-        /* botao ESCOLHER LENTES — fundo rosa da marca, texto empilhado (titulo + subtexto) */
-        .q-btn-lentes {
-            width: 100%; margin-top: 9px; padding: 12px 16px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
-            background: #e0186c; color: #fff; border: 1px solid #e0186c; border-radius: 14px;
-            font-family: var(--font-body); cursor: pointer; box-sizing: border-box; transition: background .2s;
-        }
-        .q-btn-lentes:hover { background: #c31460; border-color: #c31460; }
-        .q-btn-lentes .q-lentes-t { font-size: 14px; font-weight: 700; letter-spacing: .4px; line-height: 1.2; }
-        .q-btn-lentes .q-lentes-s { font-size: 10.5px; font-weight: 500; opacity: .92; line-height: 1.2; }
 
         /* ── PIX screen ── */
         #q-step-pix {
@@ -690,6 +680,16 @@
         .q-quantic-logo { height: 20px; opacity: 0.7; }
     
 /* ====== ESCOLHER LENTES ====== */
+
+        .q-btn-lentes {
+            width: 100%; margin-top: 9px; padding: 12px 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+            background: #e0186c; color: #fff; border: 1px solid #e0186c; border-radius: 14px;
+            font-family: var(--font-body); cursor: pointer; box-sizing: border-box; transition: background .2s;
+        }
+        .q-btn-lentes:hover { background: #c31460; border-color: #c31460; }
+        .q-btn-lentes .q-lentes-t { font-size: 14px; font-weight: 700; letter-spacing: .4px; line-height: 1.2; }
+        .q-btn-lentes .q-lentes-s { font-size: 10.5px; font-weight: 500; opacity: .92; line-height: 1.2; }
 
 
 /* ===== fluxo ESCOLHER LENTES (mesma linguagem visual do provador) ===== */
@@ -1015,11 +1015,11 @@
         <div id="q-card-lente" class="q-card-lente"></div>
         <div id="q-alternativas"></div>
         <div id="q-resumo-lente" class="q-resumo"></div>
-        <button class="q-btn-black" id="q-add-lente">ADICIONAR AO CARRINHO</button>
+        <button class="q-btn-black" id="q-add-lente">COMPRAR ARMA&Ccedil;&Atilde;O + LENTE</button>
+        <button class="q-btn-outline" id="q-so-armacao" data-carrinho="sem" style="margin-top:9px;">COMPRAR SOMENTE A ARMA&Ccedil;&Atilde;O</button>
     </div>
 
     <a class="q-voltar" data-ir="q-step-upload">voltar</a>
-    <a class="q-sair" data-carrinho="sem">prefiro s&oacute; a arma&ccedil;&atilde;o</a>
 </div>
 
 <!-- carrinho simulado -->
@@ -2432,7 +2432,7 @@ if (typeof module !== 'undefined') {
     if (window.__PL_LENTES_LOADED__) return;
     window.__PL_LENTES_LOADED__ = true;
 
-    var FASE_CARRINHO_LENTE = false;   // <-- vira true quando o order bump sair
+    var FASE_CARRINHO_LENTE = true;    // o order bump nao auto-adiciona (testado) -> pode add a lente
     var WEBHOOK_RECEITA = 'https://n8n.segredosdodrop.com/webhook/pl-ler-receita';
     var WEBHOOK_STEP = 'https://n8n.segredosdodrop.com/webhook/pl-lentes-step';
 
@@ -2567,6 +2567,7 @@ if (typeof module !== 'undefined') {
                 resumoDoGrau();
             $('#q-resumo-lente').textContent = '';
             $('#q-add-lente').textContent = 'LEVAR A ARMAÇÃO E FALAR COM A ÓTICA';
+            var so1 = $('#q-so-armacao'); if (so1) so1.style.display = 'none';   // sem lente: um botao so
             track('recomendou', { fora: (rec && rec.fora) || 'sem_produto', visao: st.visao, trat: st.trat });
         } else {
             st.lente = rec.lente;
@@ -2574,7 +2575,8 @@ if (typeof module !== 'undefined') {
             var tipo = ({ simples: 'Visão simples', multifocal: 'Multifocal', descanso: 'Sem grau' })[st.visao];
             $('#q-resumo-lente').innerHTML = 'Você escolheu: ' + tipo + ' &middot; ' + (TRAT_LABEL[st.trat] || '—') +
                 (rec.temAstig ? ' &middot; <strong>com astigmatismo</strong>' : '');
-            $('#q-add-lente').textContent = FASE_CARRINHO_LENTE ? 'ADICIONAR ARMAÇÃO + LENTE' : 'COMPRAR ARMAÇÃO';
+            $('#q-add-lente').textContent = FASE_CARRINHO_LENTE ? 'COMPRAR ARMAÇÃO + LENTE' : 'COMPRAR ARMAÇÃO';
+            var so2 = $('#q-so-armacao'); if (so2) so2.style.display = FASE_CARRINHO_LENTE ? 'flex' : 'none';
             track('recomendou', { lente: rec.lente.nome, preco: rec.lente.preco, faixa: rec.faixa, visao: st.visao, trat: st.trat });
         }
         $('#q-form-receita').hidden = true;
@@ -2661,12 +2663,29 @@ if (typeof module !== 'undefined') {
 
         if (t.id === 'q-add-lente') {
             e.preventDefault();
-            track('carrinho', { lente: st.lente ? st.lente.nome : null, preco: st.lente ? st.lente.preco : null, fase: FASE_CARRINHO_LENTE ? 'lente' : 'piloto_so_armacao' });
-            // PILOTO: adiciona so a armacao. Quando FASE_CARRINHO_LENTE=true, aqui entra o add da lente tambem.
-            comprarArmacao();
+            if (st.lente && FASE_CARRINHO_LENTE) {
+                track('carrinho', { lente: st.lente.nome, preco: st.lente.preco, fase: 'armacao_mais_lente' });
+                comprarComLente(st.lente);   // adiciona armação + lente
+            } else {
+                // fora da faixa (sem lente) ou fase desligada: só a armação
+                track('so_armacao', { visao: st.visao, motivo: 'sem_lente' });
+                comprarArmacao();
+            }
             return;
         }
     });
+
+    /* Adiciona a LENTE (product id) e a ARMAÇÃO ao carrinho, e leva pro carrinho.
+       add_to_cart usa o PRODUCT id (nao o variant) — validado na loja. */
+    function comprarComLente(lente) {
+        var body = 'add_to_cart=' + encodeURIComponent(lente.id) + '&quantity=1';
+        // primeiro a lente (fetch, sem sair da pagina); depois a armação (form, redireciona pro carrinho)
+        fetch('/comprar/', {
+            method: 'POST', credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body
+        }).then(function () { comprarArmacao(); })
+          .catch(function () { comprarArmacao(); });   // se a lente falhar, ao menos leva a armação
+    }
 
     /* ---------- leitura REAL da receita (n8n -> Gemini vision) ---------- */
     function encaixar(sel, valor) {
