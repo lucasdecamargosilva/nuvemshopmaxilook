@@ -440,6 +440,16 @@
             cursor: pointer; transition: border-color 0.2s, background 0.2s; box-sizing: border-box;
         }
         .q-btn-outline:hover { border-color: #e0186c; color: #e0186c; background: #fff0f6; }
+        /* botao ESCOLHER LENTES — fundo rosa da marca, texto empilhado (titulo + subtexto) */
+        .q-btn-lentes {
+            width: 100%; margin-top: 9px; padding: 12px 16px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+            background: #e0186c; color: #fff; border: 1px solid #e0186c; border-radius: 14px;
+            font-family: var(--font-body); cursor: pointer; box-sizing: border-box; transition: background .2s;
+        }
+        .q-btn-lentes:hover { background: #c31460; border-color: #c31460; }
+        .q-btn-lentes .q-lentes-t { font-size: 14px; font-weight: 700; letter-spacing: .4px; line-height: 1.2; }
+        .q-btn-lentes .q-lentes-s { font-size: 10.5px; font-weight: 500; opacity: .92; line-height: 1.2; }
 
         /* ── PIX screen ── */
         #q-step-pix {
@@ -888,8 +898,8 @@
                                 <div class="q-seal"><i class="ph-fill ph-shield-check"></i><span>Compra<br>Segura</span></div>
                                 <div class="q-seal"><i class="ph-fill ph-lock-key"></i><span>Pagamento<br>Seguro</span></div>
                             </div>
-                            <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">Comprar Agora</button>
-                            <button class="q-btn-outline" id="q-btn-escolher-lentes" style="display:none;margin-top:9px;">ESCOLHER LENTES<span style="display:block;font-size:10px;font-weight:500;opacity:.85;margin-top:2px;text-transform:none;letter-spacing:.02em;">a partir de R$ 129 &middot; monte seu &oacute;culos completo</span></button>
+                            <button class="q-btn-buy-now" id="q-btn-buy-now" style="display:none;">Comprar Armação</button>
+                            <button class="q-btn-lentes" id="q-btn-escolher-lentes" style="display:none;"><span class="q-lentes-t">ESCOLHER LENTES</span><span class="q-lentes-s">a partir de R$ 129 &middot; monte seu &oacute;culos completo</span></button>
                             <div id="q-related-products" style="display:none;">
                                 <h4>Veja tamb&eacute;m</h4>
                                 <div class="q-related-grid" id="q-related-grid"></div>
