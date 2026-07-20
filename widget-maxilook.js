@@ -193,7 +193,7 @@
             border: 1.5px solid #e0186c; border-radius: 0;
             font-family: 'Work Sans', var(--font-body), sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
             cursor: pointer; transition: background 0.25s, color 0.25s;
-            margin-top: 16px; margin-bottom: 10px; box-sizing: border-box;   /* margem em cima: agora fica ABAIXO do comprar */
+            margin-bottom: 10px; box-sizing: border-box;
         }
         .q-btn-inline-provador:hover { background: #e0186c; color: #fff; }
         .q-btn-inline-provador svg { width: 14px; height: 14px; flex-shrink: 0; }
@@ -701,6 +701,15 @@
             text-transform: uppercase; white-space: nowrap; cursor: pointer; transition: opacity .2s;
         }
         #q-so-armacao:hover { opacity: .88; }
+        /* botao ESCOLHER LENTES E COMPRAR na PAGINA DO PRODUTO (abaixo do comprar) */
+        .q-btn-lentes-produto {
+            width: 100%; margin-top: 10px; padding: 14px 16px; box-sizing: border-box;
+            display: block; text-align: center;
+            background: #e0186c; color: #fff; border: none; border-radius: 0;
+            font-family: 'Work Sans', var(--font-body), sans-serif; font-size: 11px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: opacity .2s;
+        }
+        .q-btn-lentes-produto:hover { opacity: .9; }
 
 /* atributo hidden manda: sem isso, classes com display:flex (.q-lendo etc.)
    vencem o [hidden] por ordem de fonte e o elemento aparece cedo demais */
@@ -1353,7 +1362,7 @@
         // Posiciona acima do botão de compra
         const buyBtn = document.querySelector('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"]');
         if (buyBtn) {
-            buyBtn.parentNode.insertBefore(inlineBtn, buyBtn.nextSibling);   // ABAIXO do comprar (nao compete com a acao principal)
+            buyBtn.parentNode.insertBefore(inlineBtn, buyBtn);   // ACIMA do comprar (como era)
         } else {
             const variantsContainer = document.querySelector('.js-product-variants');
             if (variantsContainer) {
@@ -2778,10 +2787,41 @@ if (typeof module !== 'undefined') {
         lentes.style.display = visivel ? 'flex' : 'none';
     }
 
+    /* ---------- botao "ESCOLHER LENTES E COMPRAR" na pagina do produto ---------- */
+    function abrirFluxoDoProduto(e) {
+        if (e) e.preventDefault();
+        var modal = document.getElementById('q-modal-ia'); if (modal) modal.style.display = 'flex';
+        try { document.body.style.overflow = 'hidden'; } catch (_) { }
+        // abre direto no fluxo de lentes: esconde as telas do provador (foto/resultado/pix/erro)
+        ['q-step-photo', 'q-step-pix', 'q-step-error'].forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        st.ultimo = 'abriu';
+        track('abriu', { origem: 'botao_produto' });
+        ir('q-step-lentes');
+    }
+    function inserirBotaoProduto() {
+        var buys = document.querySelectorAll('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"]');
+        var achou = false;
+        buys.forEach(function (buy) {
+            if (!buy.parentNode || buy.parentNode.querySelector('.q-btn-lentes-produto')) return;
+            achou = true;
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'q-btn-lentes-produto';
+            b.textContent = 'ESCOLHER LENTES E COMPRAR';
+            b.addEventListener('click', abrirFluxoDoProduto);
+            buy.parentNode.insertBefore(b, buy.nextSibling);
+        });
+        return achou;
+    }
+
     /* ---------- init ---------- */
     function init() {
         popular();
         wireArquivo();
+        // botao na pagina do produto (abaixo do comprar); tenta ate o botao de compra existir
+        if (!inserirBotaoProduto()) {
+            var t = 0, iv = setInterval(function () { if (inserirBotaoProduto() || ++t > 20) clearInterval(iv); }, 300);
+        }
         // observa o botao de compra do provador pra espelhar a visibilidade
         var buy = document.getElementById('q-btn-buy-now');
         if (buy) {
