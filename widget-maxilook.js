@@ -2810,6 +2810,9 @@ if (typeof module !== 'undefined') {
             b.textContent = 'ESCOLHER LENTES E COMPRAR';
             b.addEventListener('click', abrirFluxoDoProduto);
             buy.parentNode.insertBefore(b, buy.nextSibling);
+            // Provador Virtual como ULTIMO botao: move ele pra depois do "ESCOLHER LENTES E COMPRAR"
+            var inline = buy.parentNode.querySelector('.q-btn-inline-provador');
+            if (inline) buy.parentNode.insertBefore(inline, b.nextSibling);
         });
         return achou;
     }
