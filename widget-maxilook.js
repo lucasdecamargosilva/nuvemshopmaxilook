@@ -690,6 +690,12 @@
         .q-btn-lentes:hover { background: #c31460; border-color: #c31460; }
         .q-btn-lentes .q-lentes-t { font-size: 14px; font-weight: 700; letter-spacing: .4px; line-height: 1.2; }
         .q-btn-lentes .q-lentes-s { font-size: 10.5px; font-weight: 500; opacity: .92; line-height: 1.2; }
+        /* botao secundario "COMPRAR SOMENTE A ARMACAO": rotulo longo nao cabe com o
+           letter-spacing 3px + altura fixa do .q-btn-outline — afrouxa e deixa fluido */
+        #q-so-armacao {
+            height: auto; min-height: 48px; padding: 12px 16px;
+            font-size: 12px; letter-spacing: 1px; line-height: 1.25; white-space: normal;
+        }
 
 
 /* ===== fluxo ESCOLHER LENTES (mesma linguagem visual do provador) ===== */
