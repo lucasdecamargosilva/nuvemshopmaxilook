@@ -697,6 +697,9 @@
             font-size: 12px; letter-spacing: 1px; line-height: 1.25; white-space: normal;
         }
 
+/* atributo hidden manda: sem isso, classes com display:flex (.q-lendo etc.)
+   vencem o [hidden] por ordem de fonte e o elemento aparece cedo demais */
+#q-modal-ia [hidden] { display: none !important; }
 
 /* ===== fluxo ESCOLHER LENTES (mesma linguagem visual do provador) ===== */
 #q-step-lentes, #q-step-receita, #q-step-upload, #q-step-lente-final {
