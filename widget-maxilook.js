@@ -2658,61 +2658,13 @@ if (typeof module !== 'undefined') {
         return false;
     }
 
-    /* ---------- captura de WhatsApp no INICIO do fluxo ----------
-       Muita gente entrava pelo botao do produto sem passar pelo provador,
-       entao o telefone (#q-phone) ficava vazio e os passos nao gravavam contato.
-       Aqui exigimos o WhatsApp antes de qualquer passo (grava em #q-phone). */
-    function _waMask(v) {
-        var n = (v || '').replace(/\D/g, '').slice(0, 11);
-        if (n.length <= 10) return n.replace(/(\d{0,2})(\d{0,4})(\d{0,4}).*/, function (_, a, b, c) { var s = a ? '(' + a + ')' : ''; if (b) s += ' ' + b; if (c) s += '-' + c; return s; });
-        return n.replace(/(\d{0,2})(\d{0,5})(\d{0,4}).*/, function (_, a, b, c) { var s = a ? '(' + a + ')' : ''; if (b) s += ' ' + b; if (c) s += '-' + c; return s; });
-    }
-    function _waOk(nums) { return nums.length >= 10 && nums.length <= 11 && /^[1-9][1-9]/.test(nums) && !(nums.length === 11 && nums[2] !== '9'); }
-    var _waGate = null;
-    function garantirWhats(onOk) {
-        var qp = document.getElementById('q-phone');
-        if (qp && _waOk((qp.value || '').replace(/\D/g, ''))) { onOk(); return; }
-        ['q-step-photo', 'q-step-pix', 'q-step-error', 'q-step-result', 'q-step-lentes', 'q-step-receita', 'q-step-upload', 'q-step-lente-final']
-            .forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
-        if (!_waGate) {
-            var host = ((document.getElementById('q-step-lentes') || {}).parentNode) || document.querySelector('.q-content-scroll') || document.body;
-            _waGate = document.createElement('div');
-            _waGate.id = 'q-step-lente-wa';
-            _waGate.style.cssText = 'display:flex;flex-direction:column;';
-            _waGate.innerHTML =
-                '<div class="q-passos"><i class="on"></i><i></i><i></i><i></i></div>'
-                + '<span class="q-section-label">Vamos montar suas lentes</span>'
-                + '<div style="font-size:12.5px;color:var(--c-muted,#999);text-align:center;line-height:1.45;margin:2px auto 18px;max-width:300px;">Deixe seu WhatsApp — a ótica te envia o valor e a montagem das suas lentes por lá.</div>'
-                + '<div class="q-phone-wrap" style="margin-bottom:16px;"><input type="tel" id="q-lente-wa-input" class="q-input" placeholder="(11) 99999-9999" maxlength="15" inputmode="numeric" style="height:44px;"><div id="q-lente-wa-err" class="q-status-msg" style="display:none;">Número inválido — confira o DDD e o 9.</div></div>'
-                + '<button type="button" id="q-lente-wa-go" class="q-btn-lentes-produto" style="border-radius:12px;margin-top:0;padding:12px 16px;">Continuar</button>';
-            if (host) host.appendChild(_waGate);
-            var input = _waGate.querySelector('#q-lente-wa-input');
-            var err = _waGate.querySelector('#q-lente-wa-err');
-            input.addEventListener('input', function () { this.value = _waMask(this.value); if (err) err.style.display = 'none'; });
-            _waGate.querySelector('#q-lente-wa-go').addEventListener('click', function () {
-                var nums = input.value.replace(/\D/g, '');
-                if (!_waOk(nums)) { if (err) err.style.display = 'block'; input.focus(); return; }
-                var q = document.getElementById('q-phone'); if (q) q.value = input.value;
-                try { localStorage.setItem('pl_last_phone', input.value); } catch (_) { }
-                _waGate.style.display = 'none';
-                (_waGate._onOk || function () { })();
-            });
-        }
-        try { var last = localStorage.getItem('pl_last_phone'); var inp = _waGate.querySelector('#q-lente-wa-input'); if (last && !inp.value) inp.value = last; } catch (_) { }
-        _waGate._onOk = onOk;
-        var e2 = _waGate.querySelector('#q-lente-wa-err'); if (e2) e2.style.display = 'none';
-        _waGate.style.display = 'flex';
-        var sc = $('.q-content-scroll'); if (sc) sc.scrollTop = 0;
-        setTimeout(function () { try { _waGate.querySelector('#q-lente-wa-input').focus(); } catch (_) { } }, 60);
-    }
-
     /* ---------- cliques do fluxo ---------- */
     document.addEventListener('click', function (e) {
         var t = e.target.closest('[data-ir],[data-visao],[data-trat],[data-receita],[data-carrinho],' +
             '#q-btn-escolher-lentes,#q-abrir-arquivo,#q-ver-lente,#q-add-lente');
         if (!t) return;
 
-        if (t.id === 'q-btn-escolher-lentes') { e.preventDefault(); garantirWhats(function () { track('abriu', {}); ir('q-step-lentes'); }); return; }
+        if (t.id === 'q-btn-escolher-lentes') { e.preventDefault(); track('abriu', {}); ir('q-step-lentes'); return; }
         if (t.dataset.ir) { e.preventDefault(); if (t.dataset.ir === 'q-step-result') voltarResultado(); else ir(t.dataset.ir); return; }
 
         if (t.dataset.visao) {
@@ -2842,11 +2794,9 @@ if (typeof module !== 'undefined') {
         try { document.body.style.overflow = 'hidden'; } catch (_) { }
         // abre direto no fluxo de lentes: esconde as telas do provador (foto/resultado/pix/erro)
         ['q-step-photo', 'q-step-pix', 'q-step-error'].forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
-        garantirWhats(function () {
-            st.ultimo = 'abriu';
-            track('abriu', { origem: 'botao_produto' });
-            ir('q-step-lentes');
-        });
+        st.ultimo = 'abriu';
+        track('abriu', { origem: 'botao_produto' });
+        ir('q-step-lentes');
     }
     function inserirBotaoProduto() {
         var buys = document.querySelectorAll('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"]');
