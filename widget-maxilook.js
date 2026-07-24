@@ -2682,9 +2682,9 @@ if (typeof module !== 'undefined') {
             _waGate.innerHTML =
                 '<div class="q-passos"><i class="on"></i><i></i><i></i><i></i></div>'
                 + '<span class="q-section-label">Vamos montar suas lentes</span>'
-                + '<div class="q-tip-box" style="margin-bottom:18px;"><i class="ph ph-whatsapp-logo"></i><span>Deixe seu WhatsApp — a ótica te envia o valor e a montagem das suas lentes por lá.</span></div>'
-                + '<div class="q-phone-wrap"><input type="tel" id="q-lente-wa-input" class="q-input" placeholder="(11) 99999-9999" maxlength="15" inputmode="numeric"><div id="q-lente-wa-err" class="q-status-msg" style="display:none;">Número inválido — confira o DDD e o 9.</div></div>'
-                + '<button type="button" id="q-lente-wa-go" class="q-btn-lentes-produto" style="border-radius:14px;margin-top:2px;">Continuar</button>';
+                + '<div style="font-size:12.5px;color:var(--c-muted,#999);text-align:center;line-height:1.45;margin:2px auto 18px;max-width:300px;">Deixe seu WhatsApp — a ótica te envia o valor e a montagem das suas lentes por lá.</div>'
+                + '<div class="q-phone-wrap" style="margin-bottom:16px;"><input type="tel" id="q-lente-wa-input" class="q-input" placeholder="(11) 99999-9999" maxlength="15" inputmode="numeric" style="height:44px;"><div id="q-lente-wa-err" class="q-status-msg" style="display:none;">Número inválido — confira o DDD e o 9.</div></div>'
+                + '<button type="button" id="q-lente-wa-go" class="q-btn-lentes-produto" style="border-radius:12px;margin-top:0;padding:12px 16px;">Continuar</button>';
             if (host) host.appendChild(_waGate);
             var input = _waGate.querySelector('#q-lente-wa-input');
             var err = _waGate.querySelector('#q-lente-wa-err');
