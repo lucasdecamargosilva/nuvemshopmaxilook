@@ -2678,12 +2678,13 @@ if (typeof module !== 'undefined') {
             var host = ((document.getElementById('q-step-lentes') || {}).parentNode) || document.querySelector('.q-content-scroll') || document.body;
             _waGate = document.createElement('div');
             _waGate.id = 'q-step-lente-wa';
-            _waGate.style.cssText = 'display:flex;flex-direction:column;padding:4px 2px;';
+            _waGate.style.cssText = 'display:flex;flex-direction:column;';
             _waGate.innerHTML =
-                '<div style="font-family:var(--font-display,inherit);font-size:20px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;text-align:center;margin-bottom:8px;">Vamos montar suas lentes</div>'
-                + '<div style="font-size:13px;color:var(--c-muted,#777);text-align:center;line-height:1.45;margin-bottom:20px;">Deixe seu WhatsApp para receber o valor e a montagem das suas lentes.</div>'
-                + '<div class="q-phone-wrap"><input type="tel" id="q-lente-wa-input" class="q-input" placeholder="(11) 99999-9999" maxlength="15" inputmode="numeric"><div id="q-lente-wa-err" class="q-status-msg" style="display:none;color:#e0186c;">Número inválido — confira o DDD e o 9.</div></div>'
-                + '<button type="button" id="q-lente-wa-go" style="width:100%;padding:15px;margin-top:6px;background:#e0186c;color:#fff;border:none;border-radius:14px;font-family:var(--font-display,inherit);font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;">Continuar</button>';
+                '<div class="q-passos"><i class="on"></i><i></i><i></i><i></i></div>'
+                + '<span class="q-section-label">Vamos montar suas lentes</span>'
+                + '<div class="q-tip-box" style="margin-bottom:18px;"><i class="ph ph-whatsapp-logo"></i><span>Deixe seu WhatsApp — a ótica te envia o valor e a montagem das suas lentes por lá.</span></div>'
+                + '<div class="q-phone-wrap"><input type="tel" id="q-lente-wa-input" class="q-input" placeholder="(11) 99999-9999" maxlength="15" inputmode="numeric"><div id="q-lente-wa-err" class="q-status-msg" style="display:none;">Número inválido — confira o DDD e o 9.</div></div>'
+                + '<button type="button" id="q-lente-wa-go" class="q-btn-lentes-produto" style="border-radius:14px;margin-top:2px;">Continuar</button>';
             if (host) host.appendChild(_waGate);
             var input = _waGate.querySelector('#q-lente-wa-input');
             var err = _waGate.querySelector('#q-lente-wa-err');
