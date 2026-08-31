@@ -804,6 +804,15 @@
              letter-spacing:.02em; text-transform:none; }
 .q-btn-outline .q-btn-sub { color:var(--c-muted); opacity:1; }
 
+/* botao em estado "adicionando": bolinha girando + travado contra clique duplo */
+.q-btn-black[disabled], .q-btn-outline[disabled] { opacity:.75; cursor:default; pointer-events:none; }
+.q-add-spin { display:inline-block; width:14px; height:14px; margin-right:8px; vertical-align:-2px;
+              border:2px solid rgba(255,255,255,.45); border-top-color:#fff; border-radius:50%;
+              animation:q-add-gira .8s linear infinite; }
+.q-btn-outline .q-add-spin { border-color:rgba(0,0,0,.25); border-top-color:var(--c-ink); }
+@keyframes q-add-gira { to { transform: rotate(360deg); } }
+
+
 `;
 
 
@@ -2833,10 +2842,15 @@ if (typeof module !== 'undefined') {
             st.receita = r.receita; recomendarAgora(); return;
         }
 
-        if (t.dataset.carrinho === 'sem') { e.preventDefault(); track('so_armacao', { visao: st.visao }); comprarArmacao(); return; }
+        if (t.dataset.carrinho === 'sem') {
+            e.preventDefault();
+            if (!travarCompra(t, 'Adicionando…')) return;
+            track('so_armacao', { visao: st.visao }); comprarArmacao(); return;
+        }
 
         if (t.id === 'q-add-lente') {
             e.preventDefault();
+            if (!travarCompra(t, 'Adicionando…')) return;
             if (st.lente && FASE_CARRINHO_LENTE) {
                 track('carrinho', { lente: st.lente.nome, preco: st.lente.preco, fase: 'armacao_mais_lente' });
                 comprarComLente(st.lente);   // adiciona armação + lente
@@ -2851,6 +2865,29 @@ if (typeof module !== 'undefined') {
 
     /* Adiciona a LENTE (product id) e a ARMAÇÃO ao carrinho, e leva pro carrinho.
        add_to_cart usa o PRODUCT id (nao o variant) — validado na loja. */
+
+    /* Clicou em comprar: trava os botoes e mostra "Adicionando...". O carrinho da
+       Nuvemshop e' server-side, entao entre o clique e a troca de pagina a tela ficava
+       PARADA — o cliente achava que nao funcionou e clicava de novo (lente dobrada). */
+    var _comprando = false;
+    function travarCompra(btn, texto) {
+        if (_comprando) return false;
+        _comprando = true;
+        ['#q-add-lente', '#q-so-armacao'].forEach(function (sel) {
+            var b = $(sel); if (b) b.disabled = true;
+        });
+        if (btn) btn.innerHTML = '<span class="q-add-spin"></span>' + (texto || 'Adicionando…');
+        setTimeout(function () {
+            if (!_comprando) return;
+            _comprando = false;
+            ['#q-add-lente', '#q-so-armacao'].forEach(function (sel) {
+                var b = $(sel); if (b) b.disabled = false;
+            });
+            if (btn) btn.textContent = 'Tentar de novo';
+        }, 12000);
+        return true;
+    }
+
     function comprarComLente(lente) {
         var body = 'add_to_cart=' + encodeURIComponent(lente.id) + '&quantity=1';
         // primeiro a lente (fetch, sem sair da pagina); depois a armação (form, redireciona pro carrinho)
