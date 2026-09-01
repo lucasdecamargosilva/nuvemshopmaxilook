@@ -2755,7 +2755,7 @@ if (typeof module !== 'undefined') {
             $('#q-resumo-lente').textContent = '';
             $('#q-add-lente').textContent = 'LEVAR A ARMAÇÃO E FALAR COM A ÓTICA';
             var so1 = $('#q-so-armacao'); if (so1) so1.style.display = 'none';   // sem lente: um botao so
-            track('recomendou', { fora: (rec && rec.fora) || 'sem_produto', visao: st.visao, trat: st.trat });
+            track('recomendou', { fora: (rec && rec.fora) || 'sem_produto', visao: st.visao, trat: st.trat, grau: st.receita || null });
         } else {
             st.lente = rec.lente;
             pintarCard(rec.lente, rec.porque);
@@ -2764,7 +2764,7 @@ if (typeof module !== 'undefined') {
                 (rec.temAstig ? ' &middot; <strong>com astigmatismo</strong>' : '');
             $('#q-add-lente').textContent = FASE_CARRINHO_LENTE ? 'COMPRAR ARMAÇÃO + LENTE' : 'COMPRAR ARMAÇÃO';
             var so2 = $('#q-so-armacao'); if (so2) so2.style.display = FASE_CARRINHO_LENTE ? 'flex' : 'none';
-            track('recomendou', { lente: rec.lente.nome, preco: rec.lente.preco, faixa: rec.faixa, visao: st.visao, trat: st.trat });
+            track('recomendou', { lente: rec.lente.nome, preco: rec.lente.preco, faixa: rec.faixa, visao: st.visao, trat: st.trat, grau: st.receita || null });
         }
         $('#q-form-receita').hidden = true;
         $('#q-resultado-lente').hidden = false;
@@ -2949,7 +2949,7 @@ if (typeof module !== 'undefined') {
             if (!travarCompra(t, 'Adicionando…')) return;
             if (st.lente && FASE_CARRINHO_LENTE) {
                 marcarCliqueCarrinho(true);
-                track('carrinho', { lente: st.lente.nome, preco: st.lente.preco, fase: 'armacao_mais_lente' });
+                track('carrinho', { lente: st.lente.nome, preco: st.lente.preco, fase: 'armacao_mais_lente', grau: st.receita || null });
                 comprarComLente(st.lente);   // adiciona armação + lente
             } else {
                 // fora da faixa (sem lente) ou fase desligada: só a armação
