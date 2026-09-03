@@ -2780,6 +2780,9 @@ if (typeof module !== 'undefined') {
 
     /* ---------- WhatsApp: so pede quando o provador nao deixou nenhum ---------- */
     var _telPendente = null;   // o que fazer depois que a pessoa responder
+    // So pede WhatsApp quando o fluxo abriu pelo botao da PAGINA DO PRODUTO.
+    // Pelo provador o WhatsApp ja foi capturado antes — nao pede de novo.
+    var _entrouPeloProduto = false;
 
     function telAtual() {
         var v = (document.getElementById('q-phone') || {}).value || '';
@@ -2816,7 +2819,7 @@ if (typeof module !== 'undefined') {
 
     /* Roda 'depois' direto se ja temos numero; senao abre a tela e espera. */
     function pedeTelefone(depois) {
-        if (telAtual()) { depois(); return; }
+        if (!_entrouPeloProduto || telAtual()) { depois(); return; }
         _telPendente = depois;
         var inp = document.getElementById('q-lentes-tel');
         var err = document.getElementById('q-lentes-tel-erro');
@@ -2905,7 +2908,7 @@ if (typeof module !== 'undefined') {
             '#q-btn-escolher-lentes,#q-abrir-arquivo,#q-ver-lente,#q-add-lente');
         if (!t) return;
 
-        if (t.id === 'q-btn-escolher-lentes') { e.preventDefault(); track('abriu', {}); ir('q-step-lentes'); return; }
+        if (t.id === 'q-btn-escolher-lentes') { e.preventDefault(); _entrouPeloProduto = false; track('abriu', { origem: 'provador' }); ir('q-step-lentes'); return; }
         if (t.dataset.ir) { e.preventDefault(); if (t.dataset.ir === 'q-step-result') voltarResultado(); else ir(t.dataset.ir); return; }
 
         if (t.dataset.visao) {
@@ -3095,6 +3098,7 @@ if (typeof module !== 'undefined') {
         // abre direto no fluxo de lentes: esconde as telas do provador (foto/resultado/pix/erro)
         ['q-step-photo', 'q-step-pix', 'q-step-error'].forEach(function (id) { var el = document.getElementById(id); if (el) el.style.display = 'none'; });
         st.ultimo = 'abriu';
+        _entrouPeloProduto = true;
         track('abriu', { origem: 'botao_produto' });
         ir('q-step-lentes');
     }
