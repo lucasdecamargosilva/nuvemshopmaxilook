@@ -3711,12 +3711,14 @@ if (typeof module !== 'undefined') {
     }
 
     /* ---------- mostra ESCOLHER LENTES quando a tela de resultado aparece ---------- */
+    /* 13/10/2026: o fluxo so aparece se a loja ligou no dashboard (config.geral.ativo === true; ausente = desligado). */
+    function _plFluxoLigado() { if (window.PL_LENTES_PREVIEW) return true; var c = PLLC.cfgAtual(); return !!(c && c.geral && c.geral.ativo === true); }
     function revelarBotao() {
         var buy = document.getElementById('q-btn-buy-now');
         var lentes = document.getElementById('q-btn-escolher-lentes');
         if (!buy || !lentes) return;
         var visivel = buy.style.display && buy.style.display !== 'none';
-        lentes.style.display = visivel ? 'flex' : 'none';
+        lentes.style.display = visivel && _plFluxoLigado() ? 'flex' : 'none';
     }
 
     /* ---------- botao "ESCOLHER LENTES E COMPRAR" na pagina do produto ---------- */
@@ -3732,6 +3734,7 @@ if (typeof module !== 'undefined') {
         pedeTelefone(_plPrimeiraTela);
     }
     function inserirBotaoProduto() {
+        if (!_plFluxoLigado()) return false;   // desligado no dashboard: sem botao
         var buys = document.querySelectorAll('.js-addtocart, .btn-add-to-cart, [data-component="product.add-to-cart"]');
         var achou = false;
         buys.forEach(function (buy) {
